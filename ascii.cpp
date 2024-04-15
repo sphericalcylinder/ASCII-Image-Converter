@@ -21,10 +21,9 @@
 #include "worker.hpp"
 #include "settings.hpp"
 
-// https://stackoverflow.com/questions/2794054/documenting-functions-in-c-with-doxygen
 /**
- * @file main2.cpp
- * 
+ * @file ascii.cpp
+ *
 */
 
 /**
@@ -36,8 +35,7 @@
  * converts it to an ASCII art representation. It uses <a href="https://imagemagick.org">
  * ImageMagick </a> to convert the input image and <a href="https://www.gtk.org">Gtk</a>
  * (specifically <a href="https://www.gtkmm.org/en/index.html">gtkmm</a> for C++) for
- * the %GUI. Some code was taken from other sources, which are detailed in the 'Contributions'
- * section.
+ * the %GUI.
  *
  * @section usage_sec Usage
  *
@@ -63,8 +61,6 @@
  * 
 */
 
-//constexpr bool reverse_color = true; ///< Whether the image's colors are reversed
-// true is for white background, false for black
 
 // `.':_,^=;><+!rc*/z?sLTv)J7|Fi{C}fI31tlu[neoZ5Yxa2EwkP6h9d4VOGbUAKXHm8RD#$Bg0MNWQ%&@
 
@@ -228,7 +224,6 @@ std::vector<std::vector<int>> parse_file(GUI *gui, std::string image, int width,
             heightcount++; // add one to the height
             {
                 std::lock_guard<std::mutex> lock(mutex); // lock mutex and check if the program should stop
-                //https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
                 if (will_stop) {
                     stopped = true;
                     break;
@@ -236,7 +231,7 @@ std::vector<std::vector<int>> parse_file(GUI *gui, std::string image, int width,
 
                 donefrac += progress_frac; // update the progress
             }
-            gui->notify();//https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+            gui->notify();
         }
         widthcount++;
         if (token == "\n" || token == " ") { // if the token is a newline or space, ignore it
@@ -251,7 +246,6 @@ std::vector<std::vector<int>> parse_file(GUI *gui, std::string image, int width,
 }
 
 
-// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
 /**
  * @brief Does the conversion from image to ASCII
  *
@@ -268,7 +262,6 @@ std::vector<std::vector<int>> parse_file(GUI *gui, std::string image, int width,
 void Worker::work(GUI *gui, std::string filename, float scale_factor, int swidth, int sheight, Settings &s) {
     {
         std::lock_guard<std::mutex> lock(mutex); // lock mutex and set variables
-        // https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
         stopped = false;
         donefrac = 0.0;
         message = "";
@@ -276,11 +269,11 @@ void Worker::work(GUI *gui, std::string filename, float scale_factor, int swidth
 
     if (filename == "") { // if no file is selected, set message and return
         {
-            std::lock_guard<std::mutex> lock(mutex);// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+            std::lock_guard<std::mutex> lock(mutex);
             message = "-Please select an image";
             stopped = true;
         }
-        gui->notify();// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+        gui->notify();
         return;
     }
     if (filenamecache != filename) { // generate a new pgm file if the filename has changed
@@ -297,22 +290,22 @@ void Worker::work(GUI *gui, std::string filename, float scale_factor, int swidth
 
     if ((destw > swidth-50 || desth > sheight-280) && s.size_limit) { // if the image is too large to display, set message and return
         {
-            std::lock_guard<std::mutex> lock(mutex);//https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+            std::lock_guard<std::mutex> lock(mutex);
             message = "-Image is too large to be displayed on the screen\nTry increasing the scale factor.";
             stopped = true;
         }
-        gui->notify();// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+        gui->notify();
         return;
     }
     if (destw <= 0 || desth <= 0) { // if the scale factor is invalid, set message and return
         {
-            std::lock_guard<std::mutex> lock(mutex);// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+            std::lock_guard<std::mutex> lock(mutex);
             message = "-Invalid scale factor.";
             std::cout << scale_factor << std::endl;
             std::cout << destw << " " << desth << std::endl;
             stopped = true;
         }
-        gui->notify();// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+        gui->notify();
         return;
     }
 
@@ -320,7 +313,7 @@ void Worker::work(GUI *gui, std::string filename, float scale_factor, int swidth
         return;
     }
 
-    double progress_frac = 1.0/height;// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+    double progress_frac = 1.0/height;
     
 
     std::vector<std::vector<int>> lum_map = {{}}; // 2D vector to store the luminance values
@@ -395,21 +388,19 @@ void Worker::work(GUI *gui, std::string filename, float scale_factor, int swidth
     oss << std::endl;
 
     {
-        std::lock_guard<std::mutex> lock(mutex);// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+        std::lock_guard<std::mutex> lock(mutex);
         will_stop = false;
         stopped = true;
         message = oss.str();
     }
-    gui->notify();// https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+    gui->notify();
 }
 
 
 int main(int argc, char *argv[]) {
-    // https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
     auto app = Gtk::Application::create("org.gtkmm.example");
 
-    //Shows the window and returns when it is closed.
-    // https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+    /// Shows the window and returns when it is closed.
     return app->make_window_and_run<GUI>(argc, argv);
     
     return 0;

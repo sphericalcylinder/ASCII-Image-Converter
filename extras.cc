@@ -3,6 +3,11 @@
 #include "settings.hpp"
 
 /**
+ * @file extras.cc
+ * 
+*/
+
+/**
  *
  * The constructor for the SettingsWindow class. It sets up the window's
  * layout and widgets, and connects the signals to the appropriate functions.

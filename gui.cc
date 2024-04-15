@@ -20,7 +20,7 @@
  *
 */
 
-/* An rtf file header with the correct settings for an ASCII art image */
+/// An rtf file header with the correct settings for an ASCII art image
 const std::string rtf_header = R"({\rtf1\ansi\ansicpg1252\cocoartf2761
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;}
@@ -434,7 +434,7 @@ void GUI::run_button_clicked() {
         gdk_surface_new_toplevel(gdk_display_get_default())), &this->rect);
 
     
-    if (worker_thread) { // https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+    if (worker_thread) { 
         std::cout << "worker thread already running" << std::endl;
     } else {
         worker_thread = new std::thread (
@@ -444,5 +444,5 @@ void GUI::run_button_clicked() {
         );
     }
 
-    update_buttons(); // https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/sec-multithread-example.html
+    update_buttons(); 
 }
