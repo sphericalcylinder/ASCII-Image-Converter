@@ -1,0 +1,36 @@
+window {
+    background-color: #f6f5f4;
+}
+
+button {
+    /* https://discourse.gnome.org/t/how-to-modify-background-color-of-a-button/16273 */
+    background: #f6f5f4;
+}
+
+button label {
+    background: transparent;
+    color: #000000;
+}
+
+button:hover {
+    background: #d6d5d4;
+}
+
+label {
+    background: transparent;
+    color: #000000;
+}
+
+tooltip label {
+    color: #ffffff;
+}
+
+spinbutton {
+    background-color: #f6f5f4;
+    color: #000000;
+}
+
+progressbar {
+    background-color: #f6f5f4;
+    color: #000000;
+}
